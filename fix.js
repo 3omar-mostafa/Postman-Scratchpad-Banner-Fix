@@ -20,9 +20,6 @@ function injectCode(rawFileData, searchQuery, replaceString) {
 
 (async function () {
 
-
-    await fs.copyFileSync(args.requester_js, `${args.requester_js}.bak`);
-    console.log(colors.yellow(`[INFO] Backed up the file into ${args.requester_js}.bak`));
     let data = String(await fs.readFileSync(args.requester_js));
 
     let getWorkingInScratchpadBanner = {

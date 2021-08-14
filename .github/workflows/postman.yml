@@ -84,7 +84,6 @@ jobs:
       - name : "Postman Cleanup" 
         continue-on-error: true
         run: |
-          rm -v "${{ env.REQUESTER_JS }}.bak"
           curl -sf 'https://gobinaries.com/tj/node-prune' | sudo sh
           find . -type d -name node_modules -exec node-prune {} \;
       
