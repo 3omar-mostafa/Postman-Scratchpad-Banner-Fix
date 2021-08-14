@@ -3,11 +3,18 @@ name: Postman
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      version:
+        default: "latest"
+        description: "Postman Version, accepted values: ['latest', 'version/8.x.x']"
+        required: true
   
 
 env:
   FORCE_COLOR : 'true' # Force colors in console output
-  VERSION: "8.1.0"
+  VERSION: "latest" # to use custom postman version change this line into:
+                    # VERSION: "version/x.x.x"
+                    # example: VERSION: "version/8.9.1"
 
 jobs:
   build:
@@ -37,10 +44,18 @@ jobs:
       
       - name : "Install aria2 downloader" 
         run: sudo apt update && sudo apt install aria2
-        
+
+      - name : "Configure VERSION Environment Variable" 
+        run: |
+          input_version="${{ github.event.inputs.version }}"
+          if [[ ! -z $input_version ]]; then
+            echo "Determined version from user input: $input_version"
+            echo "VERSION=${input_version}" >> $GITHUB_ENV
+          fi
+
       - name : "Download & Extract Postman " 
         run: |
-          aria2c -q "https://dl.pstmn.io/download/version/${{ env.VERSION }}/${{ matrix.os_type }}"
+          aria2c -q "https://dl.pstmn.io/download/${{ env.VERSION }}/${{ matrix.os_type }}"
           ${{ matrix.extract_cmd }} Postman*
           
       - name : "Get Postman Version" 
