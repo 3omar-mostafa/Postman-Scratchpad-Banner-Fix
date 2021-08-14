@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix#readme",
   "dependencies": {
+    "asar": "^3.0.3",
     "chalk": "^4.1.2",
     "esprima": "^4.0.1",
     "lodash": "^4.17.21",

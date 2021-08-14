@@ -16,11 +16,12 @@ Tested on Postman versions from ***`8.1.0`*** to ***`8.10.0`***
 * `cd Postman-Scratchpad-Banner-Fix`
 * Run ***`npm install`*** to install dependencies
 
+# Linux and MacOS
 # Usage
 ## Patch your already installed postman
-Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file which renders scratchpad banner
+Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file (***`requester.js`***) which renders scratchpad banner
 
-### requester.js path:
+### `requester.js` path:
 
 * For Linux users, requester.js is used
   It can be found on path like this: ***`${Postman_install_dir}/resources/app/js/requester.js`***
@@ -28,10 +29,21 @@ Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Po
 * For MacOS users, requester.js is used
   It can be found on path like this: ***`${Postman_install_dir}/Contents/Resources/app/js/requester.js`***
 
-## Download prepatch postman
+## Download patched postman
 You can find downloads for linux and macos at [Releases](https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/releases)
 
-Windows is not included because its installer is `exe` file which I can not extract and re-create the installer, but you can still patch you existing installation
+# Windows
+# Usage
+## Patch your already installed postman
+Run ***`node fix.js -a ${app_asar}`*** , where ***`${app_asar}`*** is Postman file (***`app.asar`***) which is like a `tar` archive and contains most of postman's files 
+
+### `app.asar` path:
+It can be found on path like this: ***`%localappdata%\Postman\app-8.10.0\resources\app.asar`***
+
+You can learn more about *`asar`* file format [from here](https://github.com/electron/asar).
+
+## Download patched postman
+Windows is not included because its installer is *`exe`* file which I can extract and patch the files, but unfortunately I can not re-create the same installer, but you can still patch you existing installation
 
 # Methodology and Manual Patching
 The file which is responsible for displaying scratchpad banner is ***`requester.js`***

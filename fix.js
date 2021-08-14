@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
 let fs = require('fs');
+let path = require('path');
+let os = require('os')
 let esprima = require('esprima');
 let colors = require('chalk'); // print colored text into console
+let asar = require('asar');
 let { args } = require('./parse_args');
 let { findNestedObject, replaceRangeInString, printDebug } = require("./utils");
 
@@ -18,9 +21,10 @@ function injectCode(rawFileData, searchQuery, replaceString) {
   return rawFileData;
 }
 
-(async function () {
 
-    let data = String(await fs.readFileSync(args.requester_js));
+async function fixPostmanScratchpadBanner(requester_js_path) {
+
+    let data = String(await fs.readFileSync(requester_js_path));
 
     let getWorkingInScratchpadBanner = {
       query: {
@@ -52,8 +56,28 @@ function injectCode(rawFileData, searchQuery, replaceString) {
 
     data = injectCode(data, CONST_SHOW_BANNER_IN_SCRATCHPAD.query, CONST_SHOW_BANNER_IN_SCRATCHPAD.replaceString);
 
-    console.log(colors.yellow(`[INFO] Saving the file into ${args.requester_js}`))
-    await fs.writeFileSync(args.requester_js, data);
+    console.log(colors.yellow(`[INFO] Saving the file into ${requester_js_path}`))
+    await fs.writeFileSync(requester_js_path, data);
+
+}
+
+(async function () {
+
+    if (args.app_asar) {
+      let tmpDir = path.join(os.tmpdir(), "postman_app.asar_extracted");
+      asar.extractAll(args.app_asar, tmpDir);
+      console.log(colors.yellow(`[INFO] Extracted ${args.app_asar} into ${tmpDir}`));
+      let requester_js = path.join(tmpDir, 'js', 'requester.js');
+
+      await fixPostmanScratchpadBanner(requester_js);
+
+      await asar.createPackage(tmpDir, args.app_asar);
+      console.log(colors.yellow(`[INFO] Archived ${tmpDir} back into ${args.app_asar}`));
+      await fs.rmSync(tmpDir, { recursive: true });
+
+    } else {
+      await fixPostmanScratchpadBanner(args.requester_js);
+    }
 
   }
 )()
