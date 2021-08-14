@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 let fs = require('fs');
-let path = require('path');
 let esprima = require('esprima');
 let _ = require('lodash');
 let colors = require('chalk'); // print colored text into console
+let { args } = require('./parse_args');
 
 /**
  * Get Object containing query from searchObject
@@ -58,11 +58,10 @@ function injectCode(rawFileData, searchQuery, replaceString) {
 
 (async function () {
 
-    // Defaults to "${Postman}/app/resources/app/js/requester.js" , where ${Postman} is Postman installation directory
-    let requester_js_path = path.join(process.argv[2], 'app', 'resources', 'app', 'js', 'requester.js');
-    await fs.copyFileSync(requester_js_path, `${requester_js_path}.bak`);
-    console.log(colors.yellow(`[INFO] Backed up the file into ${requester_js_path}.bak`));
-    let data = String(await fs.readFileSync(requester_js_path))
+
+    await fs.copyFileSync(args.requester_js, `${args.requester_js}.bak`);
+    console.log(colors.yellow(`[INFO] Backed up the file into ${args.requester_js}.bak`));
+    let data = String(await fs.readFileSync(args.requester_js));
 
     let getWorkingInScratchpadBanner = {
       query: {
@@ -94,8 +93,8 @@ function injectCode(rawFileData, searchQuery, replaceString) {
 
     data = injectCode(data, CONST_SHOW_BANNER_IN_SCRATCHPAD.query, CONST_SHOW_BANNER_IN_SCRATCHPAD.replaceString);
 
-    console.log(colors.yellow(`[INFO] Saving the file into ${requester_js_path}`))
-    await fs.writeFileSync(requester_js_path, data);
+    console.log(colors.yellow(`[INFO] Saving the file into ${args.requester_js}`))
+    await fs.writeFileSync(args.requester_js, data);
 
   }
 )()

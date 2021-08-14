@@ -70,23 +70,21 @@ jobs:
           echo "VERSION=${version}" >> $GITHUB_ENV
           rm -v ${file}
         
-      - name : "Export POSTMAN_INSTALL_DIR Environment Variable" 
+      - name : "Find requester.js file"
         run: |
-          postman_install_dir=$PWD/$(ls -d Postman*)
-          echo "Postman Install Directory path: ${postman_install_dir}"
-          echo "POSTMAN_INSTALL_DIR=${postman_install_dir}" >> $GITHUB_ENV
-          
+          requester_js=$(grep -R 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | grep requester)
+          echo "requester.js path: ${requester_js}"
+          echo "REQUESTER_JS=${requester_js}" >> $GITHUB_ENV
+        
       - name : "Fix Scratch Pad Banner" 
         run: |
           npm install
-          npm run fix ${{ env.POSTMAN_INSTALL_DIR }}
+          node fix.js -r ${{ env.REQUESTER_JS }}
 
       - name : "Postman Cleanup" 
         continue-on-error: true
         run: |
-          requester_js_bakup="${{ env.POSTMAN_INSTALL_DIR }}/app/resources/app/js/requester.js.bak"
-          rm -v "${requester_js_bakup}"
-
+          rm -v "${{ env.REQUESTER_JS }}.bak"
           curl -sf 'https://gobinaries.com/tj/node-prune' | sudo sh
           find . -type d -name node_modules -exec node-prune {} \;
       

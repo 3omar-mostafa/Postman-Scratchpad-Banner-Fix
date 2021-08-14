@@ -18,7 +18,15 @@ Tested on Postman versions from ***`8.1.0`*** to ***`8.10.0`***
 
 # Usage
 ## Patch your already installed postman
-Run ***`npm run fix ${Postman_install_dir}`*** , where ***`${Postman_install_dir}`*** is Postman installation root directory
+Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file which renders scratchpad banner
+
+### requester.js path:
+
+* For Linux users, requester.js is used
+  It can be found on path like this: ***`${Postman_install_dir}/resources/app/js/requester.js`***
+
+* For MacOS users, requester.js is used
+  It can be found on path like this: ***`${Postman_install_dir}/Contents/Resources/app/js/requester.js`***
 
 ## Download prepatch postman
 You can find downloads for linux and macos at [Releases](https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/releases)
@@ -26,7 +34,7 @@ You can find downloads for linux and macos at [Releases](https://github.com/3oma
 Windows is not included because its installer is `exe` file which I can not extract and re-create the installer, but you can still patch you existing installation
 
 # Methodology and Manual Patching
-The file which is responsible for displaying scratchpad banner is ***`${Postman_install_dir}/app/resources/app/js/requester.js`*** ,  where ***`${Postman_install_dir}`*** is Postman installation root directory
+The file which is responsible for displaying scratchpad banner is ***`requester.js`***
 
 I've made three changes to the file (they are redundant and any one of them is enough, but made three for more reliability)
 
