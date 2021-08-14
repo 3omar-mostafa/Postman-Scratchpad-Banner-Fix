@@ -63,6 +63,15 @@ jobs:
           npm install
           npm run fix ${{ env.POSTMAN_INSTALL_DIR }}
 
+      - name : "Postman Cleanup" 
+        continue-on-error: true
+        run: |
+          requester_js_bakup="${{ env.POSTMAN_INSTALL_DIR }}/app/resources/app/js/requester.js.bak"
+          rm -v "${requester_js_bakup}"
+
+          curl -sf 'https://gobinaries.com/tj/node-prune' | sudo sh
+          find . -type d -name node_modules -exec node-prune {} \;
+      
       - name : "Create Postman archive" 
         run: |
           tar --xz -cf Postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./Postman*
