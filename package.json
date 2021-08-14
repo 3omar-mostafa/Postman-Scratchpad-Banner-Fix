@@ -1,0 +1,29 @@
+{
+  "name": "postman-scratchpad-banner-fix",
+  "version": "1.0.0",
+  "description": "Remove Scratchpad Banner from Postman 8.x.x",
+  "main": "fix.js",
+  "scripts": {
+    "fix": "node fix.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix.git"
+  },
+  "keywords": [
+    "Postman",
+    "Scratchpad"
+  ],
+  "author": "Omar Mostafa",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/issues"
+  },
+  "homepage": "https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix#readme",
+  
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "esprima": "^4.0.1",
+    "lodash": "^4.17.21"
+  }
+}
