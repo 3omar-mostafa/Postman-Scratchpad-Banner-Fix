@@ -8,7 +8,7 @@ Starting from [Postman](https://www.postman.com/) v8, working locally in scratch
 
 Therefore, I've created this repo to solve the problem, I've patched postman files to disable the scratchpad banner
 
-Tested on Postman versions from ***`8.1.0`*** to ***`8.10.0`***
+Tested on Postman versions from *`8.1.0`* to *`8.10.0`*
 
 # Install
 * Install [node.js](https://nodejs.org/en/download/)
@@ -21,7 +21,7 @@ Tested on Postman versions from ***`8.1.0`*** to ***`8.10.0`***
 ## Patch your already installed postman
 Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file (***`requester.js`***) which renders scratchpad banner
 
-### `requester.js` path:
+### requester.js path:
 
 * For Linux users, requester.js is used
   It can be found on path like this: ***`${Postman_install_dir}/resources/app/js/requester.js`***
@@ -37,7 +37,7 @@ You can find downloads for linux and macos at [Releases](https://github.com/3oma
 ## Patch your already installed postman
 Run ***`node fix.js -a ${app_asar}`*** , where ***`${app_asar}`*** is Postman file (***`app.asar`***) which is like a `tar` archive and contains most of postman's files 
 
-### `app.asar` path:
+### app.asar path:
 It can be found on path like this: ***`%localappdata%\Postman\app-8.10.0\resources\app.asar`***
 
 You can learn more about *`asar`* file format [from here](https://github.com/electron/asar).
