@@ -8,6 +8,8 @@ Starting from [Postman](https://www.postman.com/) v8, working locally in scratch
 
 Therefore, I've created this repo to solve the problem, I've patched postman files to disable the scratchpad banner
 
+Tested on Postman versions from ***`8.1.0`*** to ***`8.10.0`***
+
 # Install
 * Install [node.js](https://nodejs.org/en/download/)
 * Clone this repo `git clone https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix.git`
@@ -36,3 +38,10 @@ I've made three changes to the file (they are redundant and any one of them is e
 
 * ***`_constants_ScratchpadConstants__WEBPACK_IMPORTED_MODULE_8__["SHOW_BANNER_IN_SCRATCHPAD"]`***
     * Modified this object to return ***`HIDE_SCRATCHPAD_BANNER`*** instead
+
+# Notes
+This repo use github actions to automate checking for new releases every month, also can run manually for custom version
+
+To do this you should fork this repo and go to Actions tab and enable Github Actions
+
+You can see [this guide](https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow) to manually run an Action
