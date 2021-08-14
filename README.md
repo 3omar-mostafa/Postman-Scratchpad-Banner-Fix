@@ -1,14 +1,12 @@
 # Postman Scratchpad Banner Fix
-Remove Scratchpad Banner from Postman 8.x.x
+### Remove Scratchpad Banner from Postman 8.x.x
 
 # Description
 Starting from [Postman](https://www.postman.com/) v8, working locally in scratchpad mode introduces this annoying banner which can't be disabled completely.
 
 ![Scratchpad Banner](screenshots/scratchpad-banner.png)
 
-Therefore, I've created this repo to solve the problem
-
-I've patched postman files to disable the scratchpad
+Therefore, I've created this repo to solve the problem, I've patched postman files to disable the scratchpad banner
 
 # Install
 * Install [node.js](https://nodejs.org/en/download/)
@@ -17,13 +15,13 @@ I've patched postman files to disable the scratchpad
 * Run ***`npm install`*** to install dependencies
 
 # Usage
-## Fix already installed postman
+## Patch your already installed postman
 Run ***`npm run fix ${Postman_install_dir}`*** , where ***`${Postman_install_dir}`*** is Postman installation root directory
 
-## Download prefixed postman
-You can find downloads for linux and macos at [Releases](TODO)
+## Download prepatch postman
+You can find downloads for linux and macos at [Releases](https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/releases)
 
-Windows is not included because its installer is `exe` file which I can not extract and re-create the installer, but you can still fix you existing installation
+Windows is not included because its installer is `exe` file which I can not extract and re-create the installer, but you can still patch you existing installation
 
 # Methodology and Manual Patching
 The file which is responsible for displaying scratchpad banner is ***`${Postman_install_dir}/app/resources/app/js/requester.js`*** ,  where ***`${Postman_install_dir}`*** is Postman installation root directory
