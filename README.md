@@ -59,6 +59,8 @@ I've made three changes to the file (they are redundant and any one of them is e
 * ***`_constants_ScratchpadConstants__WEBPACK_IMPORTED_MODULE_8__["SHOW_BANNER_IN_SCRATCHPAD"]`***
     * Modified this object to return ***`HIDE_SCRATCHPAD_BANNER`*** instead
 
+If you are on windows, you can use [asar](https://github.com/electron/asar#command-line-utility) to extract ***`app.asar`*** and modify ***`requester.js`*** then repack it again
+
 # Notes
 This repo use github actions to automate checking for new releases every month, also can run manually for custom version
 
