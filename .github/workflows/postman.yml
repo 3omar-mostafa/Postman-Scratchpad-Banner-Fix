@@ -70,18 +70,33 @@ jobs:
           echo "VERSION=${version}" >> $GITHUB_ENV
           rm -v ${file}
         
-      - name : "Find requester.js file"
+      - name : "Find requester.js/app.asar file" 
         run: |
-          requester_js=$(grep -R 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | grep requester)
-          echo "requester.js path: ${requester_js}"
-          echo "REQUESTER_JS=${requester_js}" >> $GITHUB_ENV
-        
-      - name : "Fix Scratch Pad Banner" 
+          path=$(grep -R --text 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | egrep 'requester|app.asar')
+          
+          if [[ "${path}" == *requester.js ]]; then
+            echo "requester.js path: ${path}"
+            echo "REQUESTER_JS=${path}" >> $GITHUB_ENV
+          else
+            echo "app.asar path: ${path}"
+            echo "APP_ASAR=${path}" >> $GITHUB_ENV
+          fi
+          
+          
+      - name : "Fix Scratch Pad Banner [requester.js]" 
+        if: ${{ env.REQUESTER_JS }}
         run: |
           npm install
           node fix.js -r ${{ env.REQUESTER_JS }}
-
-      - name : "Postman Cleanup" 
+      
+      - name : "Fix Scratch Pad Banner [app.asar]" 
+        if: ${{ env.APP_ASAR }}
+        run: |
+          npm install
+          node fix.js -a ${{ env.APP_ASAR }}
+      
+      - name : "Postman Cleanup [requester.js]" 
+        if: ${{ env.REQUESTER_JS }}
         continue-on-error: true
         run: |
           curl -sf 'https://gobinaries.com/tj/node-prune' | sudo sh
