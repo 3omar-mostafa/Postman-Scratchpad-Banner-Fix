@@ -16,18 +16,29 @@ Tested on Postman versions from *`8.1.0`* to *`8.10.0`*
 * `cd Postman-Scratchpad-Banner-Fix`
 * Run ***`npm install`*** to install dependencies
 
-# Linux and MacOS
+# Linux
 # Usage
 ## Patch your already installed postman
 Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file (***`requester.js`***) which renders scratchpad banner
 
 ### requester.js path:
+It can be found on path like this: ***`${Postman_install_dir}/resources/app/js/requester.js`***
 
-* For Linux users, requester.js is used
-  It can be found on path like this: ***`${Postman_install_dir}/resources/app/js/requester.js`***
+## Download patched postman
+You can find downloads for linux and macos at [Releases](https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/releases)
 
-* For MacOS users, requester.js is used
-  It can be found on path like this: ***`${Postman_install_dir}/Contents/Resources/app/js/requester.js`***
+# MacOS
+# Usage
+## Patch your already installed postman
+
+* For Postman version `8.0.0` to `8.10.0`
+  * Run ***`node fix.js -r ${requester_js}`*** , where ***`${requester_js}`*** is Postman file (***`requester.js`***) which renders scratchpad banner
+  * ***`${requester_js}`*** can be found on path like this: ***`${Postman_install_dir}/Contents/Resources/app/js/requester.js`***
+
+* For Postman version `8.11.0` or above
+  * Run ***`node fix.js -a ${app_asar}`*** , where ***`${app_asar}`*** is Postman file (***`app.asar`***) which is like a `tar` archive and contains most of postman's files 
+  * ***`${app_asar}`*** can be found on path like this: ***`${Postman_install_dir}/Contents/Resources/app.asar`***
+  * You can learn more about *`asar`* file format [from here](https://github.com/electron/asar).
 
 ## Download patched postman
 You can find downloads for linux and macos at [Releases](https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix/releases)
@@ -59,7 +70,7 @@ I've made three changes to the file (they are redundant and any one of them is e
 * ***`_constants_ScratchpadConstants__WEBPACK_IMPORTED_MODULE_8__["SHOW_BANNER_IN_SCRATCHPAD"]`***
     * Modified this object to return ***`HIDE_SCRATCHPAD_BANNER`*** instead
 
-If you are on windows, you can use [asar](https://github.com/electron/asar#command-line-utility) to extract ***`app.asar`*** and modify ***`requester.js`*** then repack it again
+If you are on windows/macos, you can use [asar](https://github.com/electron/asar#command-line-utility) to extract ***`app.asar`*** and modify ***`requester.js`*** then repack it again
 
 # Notes
 This repo use github actions to automate checking for new releases every month, also can run manually for custom version
