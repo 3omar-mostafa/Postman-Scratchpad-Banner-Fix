@@ -72,7 +72,7 @@ jobs:
         
       - name : "Check if app.asar file is found" 
         run: |
-          path=$(grep -R --text 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | grep 'app.asar')
+          path=$(find $PWD/Postman* -type f -iname app.asar)
           
           if [[ "${path}" == *app.asar ]]; then
             echo "app.asar path: ${path}"
