@@ -1,4 +1,5 @@
 let _ = require('lodash');
+let { args } = require('./parse_args');
 let colors = require('chalk'); // print colored text into console
 
 
@@ -37,7 +38,9 @@ function replaceRangeInString(str, start, end, toReplace) {
 }
 
 function printDebug(oldString, newString) {
-  console.log(`${colors.blue("[DEBUG]")} Replaced '${colors.red(oldString)}' with '${colors.green(newString)}'`);
+  if (args.verbose) {
+    console.log(`${colors.blue("[DEBUG]")} Replaced '${colors.red(oldString)}' with '${colors.green(newString)}'`);
+  }
 }
 
 module.exports = { findNestedObject, replaceRangeInString, printDebug };

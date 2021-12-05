@@ -6,8 +6,27 @@ let os = require('os')
 let esprima = require('esprima');
 let colors = require('chalk'); // print colored text into console
 let asar = require('asar');
+let replace = require("replace");
 let { args } = require('./parse_args');
 let { findNestedObject, replaceRangeInString, printDebug } = require("./utils");
+
+/**
+ * Get Relevant Files to process, these files are javascript files containing `getWorkingInScratchpadBanner` function,
+ * or asar archives
+ * @param postmanDirectory Postman Directory to search in
+ * @returns Array of strings containing found file paths
+ */
+function getRelevantFilePaths(postmanDirectory) {
+  let searchResults = replace({
+    regex: "getWorkingInScratchpadBanner",
+    include: "*.js,app.asar",
+    exclude: "*CommonLazyChunk.js", // This file causes parsing errors and has no effect on showing/hiding scratchpad
+    paths: [postmanDirectory],
+    recursive: true,
+    silent: true,
+  });
+  return searchResults.map(obj => obj.path);
+}
 
 
 function injectCode(rawFileData, searchQuery, replaceString) {
@@ -23,6 +42,8 @@ function injectCode(rawFileData, searchQuery, replaceString) {
 
 
 async function fixPostmanScratchpadBanner(requester_js_path) {
+  console.log(colors.yellow(`[INFO] Processing ${requester_js_path}`));
+  try {
 
     let data = String(await fs.readFileSync(requester_js_path));
 
@@ -36,48 +57,45 @@ async function fixPostmanScratchpadBanner(requester_js_path) {
 
     data = injectCode(data, getWorkingInScratchpadBanner.query, getWorkingInScratchpadBanner.replaceString);
 
-    let RETURN_SHOW_BANNER_IN_SCRATCHPAD = {
-      query: {
-        type: 'ReturnStatement',
-        argument: { type: 'Identifier', name: 'SHOW_BANNER_IN_SCRATCHPAD' }
-      },
-      replaceString: "return HIDE_SCRATCHPAD_BANNER;"
-    };
-
-    data = injectCode(data, RETURN_SHOW_BANNER_IN_SCRATCHPAD.query, RETURN_SHOW_BANNER_IN_SCRATCHPAD.replaceString);
-
-    let CONST_SHOW_BANNER_IN_SCRATCHPAD = {
-      query: {
-        type: 'VariableDeclarator',
-        id: { type: 'Identifier', name: 'SHOW_BANNER_IN_SCRATCHPAD' }
-      },
-      replaceString: "SHOW_BANNER_IN_SCRATCHPAD = HIDE_SCRATCHPAD_BANNER;"
-    };
-
-    data = injectCode(data, CONST_SHOW_BANNER_IN_SCRATCHPAD.query, CONST_SHOW_BANNER_IN_SCRATCHPAD.replaceString);
-
-    console.log(colors.yellow(`[INFO] Saving the file into ${requester_js_path}`))
+    console.log(colors.yellow(`[INFO] Saving the file into ${requester_js_path}`));
     await fs.writeFileSync(requester_js_path, data);
 
+  } catch (e) {
+    if (args.verbose) {
+      console.log(colors.red(`------------------------------------------------`));
+      console.log(colors.red(`[ERROR] Error Processing ${requester_js_path}`));
+      console.log(colors.red(`[ERROR] ${e.stack}`));
+      console.log(colors.red(`------------------------------------------------`));
+    }
+  }
+
+  console.log(colors.yellow(`------------------------------------------------`));
 }
 
+
+// Main function
 (async function () {
 
-    if (args.app_asar) {
-      let tmpDir = path.join(os.tmpdir(), "postman_app.asar_extracted");
-      asar.extractAll(args.app_asar, tmpDir);
-      console.log(colors.yellow(`[INFO] Extracted ${args.app_asar} into ${tmpDir}`));
-      let requester_js = path.join(tmpDir, 'js', 'requester.js');
+    let postmanDirectory = args.postman_dir;
 
-      await fixPostmanScratchpadBanner(requester_js);
+    for (let filepath of getRelevantFilePaths(postmanDirectory)) {
+      if (filepath.toLowerCase().endsWith("app.asar")) {
+        let app_asar = filepath;
+        let tmpDir = path.join(os.tmpdir(), "postman_app.asar_extracted");
+        asar.extractAll(app_asar, tmpDir);
+        console.log(colors.yellow(`[INFO] Extracted ${app_asar} into ${tmpDir}`));
 
-      await asar.createPackage(tmpDir, args.app_asar);
-      console.log(colors.yellow(`[INFO] Archived ${tmpDir} back into ${args.app_asar}`));
-      await fs.rmSync(tmpDir, { recursive: true });
+        for (let filepath of getRelevantFilePaths(tmpDir)) {
+          await fixPostmanScratchpadBanner(filepath);
+        }
 
-    } else {
-      await fixPostmanScratchpadBanner(args.requester_js);
+        await asar.createPackage(tmpDir, app_asar);
+        console.log(colors.yellow(`[INFO] Archived ${tmpDir} back into ${app_asar}`));
+        await fs.rmSync(tmpDir, { recursive: true });
+
+      } else {
+        await fixPostmanScratchpadBanner(filepath);
+      }
     }
-
   }
 )()

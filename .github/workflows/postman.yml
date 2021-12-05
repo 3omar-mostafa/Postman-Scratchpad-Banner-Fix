@@ -9,7 +9,7 @@ on:
     inputs:
       version:
         default: "latest"
-        description: "Postman Version, accepted values: ['latest', 'version/8.x.x']"
+        description: "Postman Version, accepted values: ['latest', 'version/8.x.x', 'version/9.x.x']"
         required: true
   
 
@@ -43,7 +43,7 @@ jobs:
       
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
       
       - name : "Install aria2 downloader" 
         run: sudo apt update && sudo apt install aria2
@@ -70,33 +70,24 @@ jobs:
           echo "VERSION=${version}" >> $GITHUB_ENV
           rm -v ${file}
         
-      - name : "Find requester.js/app.asar file" 
+      - name : "Check if app.asar file is found" 
         run: |
-          path=$(grep -R --text 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | egrep 'requester|app.asar')
+          path=$(grep -R --text 'getWorkingInScratchpadBanner' $PWD/Postman* | cut -d':' -f1 | uniq | grep 'app.asar')
           
-          if [[ "${path}" == *requester.js ]]; then
-            echo "requester.js path: ${path}"
-            echo "REQUESTER_JS=${path}" >> $GITHUB_ENV
-          else
+          if [[ "${path}" == *app.asar ]]; then
             echo "app.asar path: ${path}"
-            echo "APP_ASAR=${path}" >> $GITHUB_ENV
+          else
+            echo "No app.asar file"
+            echo "NO_APP_ASAR=True" >> $GITHUB_ENV
           fi
           
-          
-      - name : "Fix Scratch Pad Banner [requester.js]" 
-        if: ${{ env.REQUESTER_JS }}
+      - name : "Fix Scratch Pad Banner" 
         run: |
           npm install
-          node fix.js -r ${{ env.REQUESTER_JS }}
-      
-      - name : "Fix Scratch Pad Banner [app.asar]" 
-        if: ${{ env.APP_ASAR }}
-        run: |
-          npm install
-          node fix.js -a ${{ env.APP_ASAR }}
-      
-      - name : "Postman Cleanup [requester.js]" 
-        if: ${{ env.REQUESTER_JS }}
+          node fix.js -p ./Postman* -v
+ 
+      - name : "Postman Cleanup" 
+        if: ${{ env.NO_APP_ASAR }}
         continue-on-error: true
         run: |
           curl -sf 'https://gobinaries.com/tj/node-prune' | sudo sh
@@ -109,11 +100,11 @@ jobs:
           
       - name : "Calculate Checksum" 
         run: |
-          echo -e "\nChecksum - ${{ matrix.os_name }}\n" >> checksum
-          echo -n "SHA1: " >> checksum
-          sha1sum Postman*.tar.xz >> checksum
-          echo -n "SHA256: " >> checksum
-          sha256sum Postman*.tar.xz >> checksum
+          echo -e "\nChecksum - ${{ matrix.os_name }}\n" | tee -a checksum
+          echo -n "SHA1: " | tee -a checksum
+          sha1sum Postman*.tar.xz | tee -a checksum
+          echo -n "SHA256: " | tee -a checksum
+          sha256sum Postman*.tar.xz | tee -a checksum
 
       - name: Release Files
         uses: softprops/action-gh-release@v1
