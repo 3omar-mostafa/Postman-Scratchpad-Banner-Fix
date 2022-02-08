@@ -3,7 +3,7 @@
 let fs = require('fs');
 let path = require('path');
 let os = require('os')
-let esprima = require('esprima');
+let espree = require('espree');
 let colors = require('chalk'); // print colored text into console
 let asar = require('asar');
 let replace = require("replace");
@@ -20,7 +20,6 @@ function getRelevantFilePaths(postmanDirectory) {
   let searchResults = replace({
     regex: "getWorkingInScratchpadBanner",
     include: "*.js,app.asar",
-    exclude: "*CommonLazyChunk.js", // This file causes parsing errors and has no effect on showing/hiding scratchpad
     paths: [postmanDirectory],
     recursive: true,
     silent: true,
@@ -31,7 +30,7 @@ function getRelevantFilePaths(postmanDirectory) {
 
 function injectCode(rawFileData, searchQuery, replaceString) {
   // We need to reparse the data after each manipulation because we have changed their position
-  let parsedJS = esprima.parseScript(rawFileData, { range: true, tolerant: true });
+  let parsedJS = espree.parse(rawFileData, { range: true, ecmaVersion: 2022 });
   let parsedObject = findNestedObject(parsedJS, searchQuery);
   let range = parsedObject.range;
 
