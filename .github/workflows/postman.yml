@@ -47,6 +47,9 @@ jobs:
       
       - name : "Install aria2 downloader" 
         run: sudo apt update && sudo apt install aria2
+      
+      - name : "Install rename utility" 
+        run: sudo apt update && sudo apt install rename
 
       - name : "Configure VERSION Environment Variable" 
         run: |
@@ -59,20 +62,22 @@ jobs:
       - name : "Download & Extract Postman " 
         run: |
           aria2c -q "https://dl.pstmn.io/download/${{ env.VERSION }}/${{ matrix.os_type }}"
-          ${{ matrix.extract_cmd }} Postman*
+          rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
+          ${{ matrix.extract_cmd }} postman*
+          rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
           
       - name : "Get Postman Version" 
         run: |
           ext=${{ matrix.extension }}
-          file=$(ls Postman*${ext})
-          version=$(python3 -c "import re; print(re.match(r'Postman.*(([0-9]+\.){2}[0-9]+).*${ext}', '${file}').group(1))")
+          file=$(ls postman*${ext})
+          version=$(python3 -c "import re; print(re.match(r'postman.*(([0-9]+\.){2}[0-9]+).*${ext}', '${file}').group(1))")
           echo "Postman Version = ${version}"
           echo "VERSION=${version}" >> $GITHUB_ENV
           rm -v ${file}
         
       - name : "Check if app.asar file is found" 
         run: |
-          path=$(find $PWD/Postman* -type f -iname app.asar)
+          path=$(find $PWD/postman* -type f -iname app.asar)
           
           if [[ "${path}" == *app.asar ]]; then
             echo "app.asar path: ${path}"
@@ -84,7 +89,7 @@ jobs:
       - name : "Fix Scratch Pad Banner" 
         run: |
           npm install
-          node fix.js -p ./Postman* -v
+          node fix.js -p ./postman* -v
  
       - name : "Postman Cleanup" 
         if: ${{ env.NO_APP_ASAR }}
@@ -95,24 +100,24 @@ jobs:
       
       - name : "Create Postman archive" 
         run: |
-          tar --xz -cf Postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./Postman*
+          tar --xz -cf postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./postman*
           ls -lh
           
       - name : "Calculate Checksum" 
         run: |
           echo -e "\nChecksum - ${{ matrix.os_name }}\n" | tee -a checksum
           echo -n "SHA1: " | tee -a checksum
-          sha1sum Postman*.tar.xz | tee -a checksum
+          sha1sum postman*.tar.xz | tee -a checksum
           echo -n "SHA256: " | tee -a checksum
-          sha256sum Postman*.tar.xz | tee -a checksum
+          sha256sum postman*.tar.xz | tee -a checksum
 
       - name: Release Files
         uses: softprops/action-gh-release@v1
         with:
-          name: "Postman v${{ env.VERSION }}"
+          name: "postman v${{ env.VERSION }}"
           body_path: checksum
           tag_name: ${{ env.VERSION }}
-          files: Postman*.tar.xz
+          files: postman*.tar.xz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
