@@ -119,8 +119,9 @@ jobs:
       - name: Release Files
         uses: softprops/action-gh-release@v1
         with:
-          name: "postman v${{ env.VERSION }}"
+          name: "Postman v${{ env.VERSION }}"
           body_path: checksum
+          append_body: true
           tag_name: ${{ env.VERSION }}
           files: postman*.tar.xz
         env:
