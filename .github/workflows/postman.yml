@@ -30,8 +30,13 @@ jobs:
             extract_cmd: 'tar -xf'
             extension: '.tar.gz'
             
-          - os_name: 'Mac OS'
-            os_type:  'osx'
+          - os_name: 'Mac OS - Intel x86_64'
+            os_type:  'osx_64'
+            extract_cmd: 'unzip -q'
+            extension: '.zip'
+            
+          - os_name: 'Mac OS - Apple Silicon'
+            os_type:  'osx_arm64'
             extract_cmd: 'unzip -q'
             extension: '.zip'
     
@@ -61,7 +66,7 @@ jobs:
 
       - name : "Download & Extract Postman " 
         run: |
-          aria2c -q "https://dl.pstmn.io/download/${{ env.VERSION }}/${{ matrix.os_type }}"
+          wget --content-disposition -q "https://dl.pstmn.io/download/${{ env.VERSION }}/${{ matrix.os_type }}"
           rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
           ${{ matrix.extract_cmd }} postman*
           rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
