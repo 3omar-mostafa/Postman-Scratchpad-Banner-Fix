@@ -117,7 +117,7 @@ jobs:
           sha256sum postman*.tar.xz | tee -a checksum
 
       - name: Release Files
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@master # use @master to be able to use append_body, use @v1 when it is released
         with:
           name: "Postman v${{ env.VERSION }}"
           body_path: checksum
