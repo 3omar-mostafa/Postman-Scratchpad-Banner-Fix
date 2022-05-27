@@ -8,7 +8,7 @@ Starting from [Postman](https://www.postman.com/) v8, working locally in scratch
 
 Therefore, I've created this repo to solve the problem, I've patched postman files to disable the scratchpad banner
 
-Tested on Postman versions from *`8.1.0`* to *`9.16.0`*
+Tested on Postman versions from *`8.1.0`* to *`9.19.3`*
 
 # Install
 * Install [node.js](https://nodejs.org/en/download/)
