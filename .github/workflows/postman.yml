@@ -77,12 +77,6 @@ jobs:
           
           mv postman* Postman
           
-      - name : "Get Postman Version" 
-        run: |
-          version=$(cat Postman/app/resources/app/package.json | jq .version -r)
-          echo "Postman Version = ${version}"
-          echo "VERSION=${version}" >> $GITHUB_ENV
-          
       - name : "Check if app.asar file is found" 
         run: |
           path=$(find $PWD/Postman -type f -iname app.asar)
@@ -94,6 +88,21 @@ jobs:
             echo "NO_APP_ASAR=True" >> $GITHUB_ENV
           fi
           
+      - name : "Get Postman Version" 
+        run: |
+          if 
+          if [[ -n "${NO_APP_ASAR}" ]] ;  then
+            version=$(cat Postman/app/resources/app/package.json | jq .version -r)
+          else
+            npm install -g asar
+            path=$(find $PWD/Postman -type f -iname app.asar)
+            asar e "$path" /tmp/postman_app.asar_extracted
+            version=$(cat /tmp/postman_app.asar_extracted/package.json | jq .version -r)
+          fi
+
+          echo "Postman Version = ${version}"
+          echo "VERSION=${version}" >> $GITHUB_ENV
+
       - name : "Fix Scratch Pad Banner" 
         run: |
           npm install
