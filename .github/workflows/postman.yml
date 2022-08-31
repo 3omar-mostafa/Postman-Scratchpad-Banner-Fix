@@ -75,7 +75,7 @@ jobs:
         run: |
           ext=${{ matrix.extension }}
           file=$(ls postman*${ext})
-          version=$(python3 -c "import re; print(re.match(r'postman.*(([0-9]+\.){2}[0-9]+).*${ext}', '${file}').group(1))")
+          version=$(cat postman/app/resources/app/package.json | jq .version -r)
           echo "Postman Version = ${version}"
           echo "VERSION=${version}" >> $GITHUB_ENV
           rm -v "${file}"
@@ -105,7 +105,8 @@ jobs:
       
       - name : "Create Postman archive" 
         run: |
-          tar --xz -cf postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./postman*
+          mv ./postman* Postman
+          tar --xz -cf postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./Postman
           ls -lh
           
       - name : "Calculate Checksum" 
