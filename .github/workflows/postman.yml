@@ -70,17 +70,19 @@ jobs:
           rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
           ${{ matrix.extract_cmd }} postman*
           rename --verbose 'y/A-Z/a-z/' Postman* # Rename to lowercase
+          
+          ext=${{ matrix.extension }}
+          file=$(ls postman*${ext})
+          rm -v "${file}"
+          
           mv postman* Postman
           
       - name : "Get Postman Version" 
         run: |
-          ext=${{ matrix.extension }}
-          file=$(ls postman*${ext})
           version=$(cat postman/app/resources/app/package.json | jq .version -r)
           echo "Postman Version = ${version}"
           echo "VERSION=${version}" >> $GITHUB_ENV
-          rm -v "${file}"
-        
+          
       - name : "Check if app.asar file is found" 
         run: |
           path=$(find $PWD/Postman -type f -iname app.asar)
