@@ -97,6 +97,7 @@ jobs:
             path=$(find $PWD/Postman -type f -iname app.asar)
             asar e "$path" /tmp/postman_app.asar_extracted
             version=$(cat /tmp/postman_app.asar_extracted/package.json | jq .version -r)
+            rm -rf /tmp/postman_app.asar_extracted
           fi
 
           echo "Postman Version = ${version}"
