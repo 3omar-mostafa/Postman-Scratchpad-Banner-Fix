@@ -79,7 +79,7 @@ jobs:
           
       - name : "Get Postman Version" 
         run: |
-          version=$(cat postman/app/resources/app/package.json | jq .version -r)
+          version=$(cat Postman/app/resources/app/package.json | jq .version -r)
           echo "Postman Version = ${version}"
           echo "VERSION=${version}" >> $GITHUB_ENV
           
