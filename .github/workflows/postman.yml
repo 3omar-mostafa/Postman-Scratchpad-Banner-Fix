@@ -90,7 +90,6 @@ jobs:
           
       - name : "Get Postman Version" 
         run: |
-          if 
           if [[ -n "${NO_APP_ASAR}" ]] ;  then
             version=$(cat Postman/app/resources/app/package.json | jq .version -r)
           else
