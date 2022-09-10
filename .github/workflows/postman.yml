@@ -73,6 +73,7 @@ jobs:
           
           ext=${{ matrix.extension }}
           file=$(ls postman*${ext})
+          sha256sum "${file}"
           rm -v "${file}"
           
           mv postman* Postman
@@ -117,7 +118,9 @@ jobs:
       
       - name : "Create Postman archive" 
         run: |
-          tar --xz -cf postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz ./Postman
+          FILENAME=postman-${{ matrix.os_type }}-${{ env.VERSION }}.tar.xz
+          echo "FILENAME=${FILENAME}" >> $GITHUB_ENV
+          tar --xz -cf "$FILENAME" ./Postman
           ls -lh
           
       - name : "Calculate Checksum" 
@@ -128,7 +131,23 @@ jobs:
           echo -n "SHA256: " | tee -a checksum
           sha256sum postman*.tar.xz | tee -a checksum
 
+      - name: Check if we already released this version to skip Release File Step
+        run: |          
+          url="https://github.com/${{ github.repository }}/releases/download/$VERSION/$FILENAME"
+          echo "[DEBUG] URL = ${url}"
+          
+          status_code=$(curl -sLo /dev/null -w "%{http_code}" "$url")
+          
+          echo "[DEBUG] Status Code = ${status_code}"
+          
+          if [[ "$status_code" == "404" ]]; then
+            echo "RELEASE=true" >> $GITHUB_ENV
+          else
+            echo "[WARNING] ============================ SKIPPED CREATING RELEASE ============================"
+          fi
+          
       - name: Release Files
+        if: ${{ env.RELEASE }}
         uses: softprops/action-gh-release@master # use @master to be able to use append_body, use @v1 when it is released
         with:
           name: "Postman v${{ env.VERSION }}"
