@@ -1,5 +1,5 @@
 # Postman Scratchpad Banner Fix
-### Remove Scratchpad Banner from Postman 8.x.x and 9.x.x
+### Remove Scratchpad Banner from Postman 8.x.x, 9.x.x and 10.x.x
 
 # Description
 Starting from [Postman](https://www.postman.com/) v8, working locally in scratchpad mode introduces this annoying banner which can't be disabled completely.
@@ -8,7 +8,7 @@ Starting from [Postman](https://www.postman.com/) v8, working locally in scratch
 
 Therefore, I've created this repo to solve the problem, I've patched postman files to disable the scratchpad banner
 
-Tested on Postman versions from *`8.1.0`* to *`9.29.0`*
+Tested on Postman versions from *`8.1.0`* to *`10.1.2`*
 
 # Install
 * Install [node.js](https://nodejs.org/en/download/)
