@@ -25,8 +25,13 @@ jobs:
       fail-fast: false
       matrix: 
         include:
-          - os_name: 'Linux x86_64'
+          - os_name: 'Linux - x86_64'
             os_type:  'linux64'
+            extract_cmd: 'tar -xf'
+            extension: '.tar.gz'
+            
+          - os_name: 'Linux - ARM 64'
+            os_type:  'linux_arm64'
             extract_cmd: 'tar -xf'
             extension: '.tar.gz'
             
