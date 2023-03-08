@@ -3,6 +3,9 @@
   "version": "2.0.0",
   "description": "Remove Scratchpad Banner from Postman 8.x.x, 9.x.x, 10.x.x",
   "main": "fix.js",
+  "engines": {
+    "node": ">=14.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix.git"

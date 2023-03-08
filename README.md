@@ -11,7 +11,7 @@ Therefore, I've created this repo to solve the problem, I've patched postman fil
 Tested on Postman versions from *`8.1.0`* to *`10.10.9`*
 
 # Install
-* Install [node.js](https://nodejs.org/en/download/)
+* Install [node.js](https://nodejs.org/en/download/) >= v14
 * Clone this repo `git clone https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix.git`
 * `cd Postman-Scratchpad-Banner-Fix`
 * Run ***`npm install`*** to install dependencies
