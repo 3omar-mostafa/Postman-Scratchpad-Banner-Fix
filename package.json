@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/3omar-mostafa/Postman-Scratchpad-Banner-Fix#readme",
   "dependencies": {
-    "@electron/asar": "^3.2.2",
+    "@electron/asar": "^3.2.3",
     "chalk": "^4.1.2",
     "espree": "^9.4.1",
     "lodash": "^4.17.21",
     "replace": "^1.2.2",
-    "yargs": "^17.6.2"
+    "yargs": "^17.7.1"
   }
 }
